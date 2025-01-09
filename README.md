@@ -51,7 +51,7 @@ Display help messages in the inspector with different message types and conditio
 ```csharp
 [HeyHelpBox("Please assign a manager.", HeyHelpBoxAttribute.BoxType.Error, nameof(manager), conditionValue: null)]
 [HeyObjectField(required: true, minimizeWhenNull: true)]
-[SerializeField] protected internal ManagerMono manager;
+[SerializeField] private ManagerMono manager;
 ```
 
 ### HeyObjectField
