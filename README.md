@@ -23,6 +23,11 @@ Or simply copy the contents of this repository into your Unity project's Package
 
 ## Attribute Documentation
 
+- Using Hey Attributes
+```csharp
+using JahnStarGames.Attributes;
+```
+
 ### HeySerializableDictionary
 A serializable dictionary implementation for Unity that allows you to store key-value pairs that persist in the Unity Inspector.
 
