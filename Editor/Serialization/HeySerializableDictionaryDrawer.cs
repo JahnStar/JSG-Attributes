@@ -68,7 +68,7 @@ namespace JahnStarGames.Attributes
 
                 if (valueProperty.isExpanded)
                 {
-                    valueRect = new Rect(rect.x, rect.y + SingleLineHeight, rect.width - SingleLineHeight, valueHeight);
+                    valueRect = new Rect(rect.x, rect.y + SingleLineHeight + 2, rect.width - SingleLineHeight, valueHeight);
                     EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none, true);
                 }
             }
@@ -93,6 +93,7 @@ namespace JahnStarGames.Attributes
         {
             var element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
             var valueProperty = element.FindPropertyRelative("Value");
+            if (!valueProperty.isExpanded) return SingleLineHeight + VerticalSpacing * 2;
             float valuePropertyHeight = EditorGUI.GetPropertyHeight(valueProperty, true);
 
             float valueHeight = valueProperty != null ? valuePropertyHeight : SingleLineHeight;

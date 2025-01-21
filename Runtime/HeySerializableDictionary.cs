@@ -177,6 +177,11 @@ namespace JahnStarGames.Attributes
             foreach (var kvp in dict) newDict.Add(kvp.Key, kvp.Value);
             return newDict;
         }
+
+        public void ForEach(Action<KeyValuePair<TKey, TValue>> action)
+        {
+            foreach (var kvp in dict) action(kvp);
+        }
         
         IEnumerator<KeyValuePair<TKey, TValue>> IEnumerable<KeyValuePair<TKey, TValue>>.GetEnumerator() => dict.GetEnumerator();
         IEnumerator IEnumerable.GetEnumerator() => dict.GetEnumerator();

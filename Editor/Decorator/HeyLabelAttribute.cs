@@ -82,7 +82,16 @@ namespace JahnStarGames.Attributes
             if (!string.IsNullOrEmpty(labelAttribute.getFromField))
             {
                 var field = property.serializedObject.FindProperty(labelAttribute.getFromField);
-                if (field != null) labelText = field.stringValue;
+                if (field != null)
+                {
+                    switch (field.propertyType)
+                    {
+                        case SerializedPropertyType.Boolean: labelText += ": " + field.boolValue; break;
+                        case SerializedPropertyType.Integer: labelText += ": " + field.intValue; break;
+                        case SerializedPropertyType.Float: labelText += ": " + field.floatValue; break;
+                        case SerializedPropertyType.String: labelText = field.stringValue; break;
+                    }
+                }
             }
             else if (!string.IsNullOrEmpty(labelAttribute.labelText)) labelText = labelAttribute.labelText;
             var newLabel = new GUIContent(labelText);

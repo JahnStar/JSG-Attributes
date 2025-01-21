@@ -50,7 +50,7 @@ namespace JahnStarGames.Attributes
         }
 
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label) 
-        => property.isExpanded ? EditorGUI.GetPropertyHeight(property, label, true) + EditorGUIUtility.singleLineHeight : EditorGUIUtility.singleLineHeight;
+        => property.isExpanded ? EditorGUI.GetPropertyHeight(property, label, true) : EditorGUIUtility.singleLineHeight;
     }
     #endif
 }

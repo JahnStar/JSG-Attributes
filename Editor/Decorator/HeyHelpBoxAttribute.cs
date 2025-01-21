@@ -6,15 +6,22 @@ using UnityEditor;
 
 namespace JahnStarGames.Attributes
 {
+    public enum HelpBoxType
+    {
+        None,
+        Info,
+        Warning,
+        Error
+    }
     [AttributeUsage(AttributeTargets.Field)]
     public class HeyHelpBoxAttribute : PropertyAttribute
     {
         public readonly string message;
-        public readonly BoxType messageType;
+        public readonly HelpBoxType messageType;
         public readonly float heightLineCount = 2;
         public string conditionName;
         public object conditionValue;
-        public HeyHelpBoxAttribute(string message, BoxType messageType, string conditionName, object conditionValue, float lineCount = 2)
+        public HeyHelpBoxAttribute(string message, HelpBoxType messageType, string conditionName, object conditionValue, float lineCount = 2)
         {
             this.message = message;
             this.messageType = messageType;
@@ -22,19 +29,10 @@ namespace JahnStarGames.Attributes
             this.conditionValue = conditionValue;
             this.heightLineCount = lineCount;
         }
-        public HeyHelpBoxAttribute(string message, BoxType messageType = BoxType.Info)
+        public HeyHelpBoxAttribute(string message, HelpBoxType messageType = HelpBoxType.Info)
         {
             this.message = message;
             this.messageType = messageType;
-        }
-
-
-        public enum BoxType
-        {
-            None,
-            Info,
-            Warning,
-            Error
         }
     }
 #if UNITY_EDITOR
@@ -86,11 +84,13 @@ namespace JahnStarGames.Attributes
             switch (conditionProperty.propertyType)
             {
                 case SerializedPropertyType.Boolean:
-                    return conditionProperty.boolValue.Equals(helpBoxAttribute.conditionValue);
+                    return conditionProperty.boolValue == Convert.ToBoolean(helpBoxAttribute.conditionValue);
                 case SerializedPropertyType.Integer:
-                    return conditionProperty.intValue.Equals(helpBoxAttribute.conditionValue);
+                    return conditionProperty.intValue == Convert.ToInt32(helpBoxAttribute.conditionValue);
                 case SerializedPropertyType.Float:
-                    return conditionProperty.floatValue.Equals(helpBoxAttribute.conditionValue);
+                    const float epsilon = 0.0001f;
+                    float conditionFloat = Convert.ToSingle(helpBoxAttribute.conditionValue);
+                    return Math.Abs(conditionProperty.floatValue - conditionFloat) < epsilon;
                 case SerializedPropertyType.String:
                     return conditionProperty.stringValue.Equals(helpBoxAttribute.conditionValue);
                 // Extend with other types as needed

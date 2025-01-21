@@ -1,12 +1,12 @@
 {
   "name": "com.jahnstargames.attributes",
-  "displayName": "Hey Attributes",
+  "displayName": "JSG Attributes",
   "author": {
-    "name": "Jahn Star",
+    "name": "Jahn Star Games",
     "email": "contact@jahnstar.com",
     "url": "https://jahnstar.com"
   },
-  "version": "0.2.5",
+  "version": "0.2.6",
   "unity": "2022.3",
   "description": "</> by Halil Emre Yildiz\n\n",
   "unityRelease": "20f1",
