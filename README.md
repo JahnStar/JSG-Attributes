@@ -1,4 +1,4 @@
-# Hey-Attributes for Unity
+# JSG-Attributes for Unity
 
 A comprehensive collection of custom attributes to enhance Unity Inspector functionality and improve workflow. These attributes provide advanced customization options for displaying and managing properties in the Unity Editor.
 
@@ -17,13 +17,13 @@ A comprehensive collection of custom attributes to enhance Unity Inspector funct
 1. Open the Package Manager in Unity (Window > Package Manager)
 2. Click the "+" button in the top-left corner
 3. Choose "Add package from git URL..."
-4. Enter: `https://github.com/JahnStar/Hey-Attributes.git`
+4. Enter: `https://github.com/Jahn-Star-Games/JSG-Attributes`
 
 Or simply copy the contents of this repository into your Unity project's Packages folder.
 
 ## Attribute Documentation
 
-- Using Hey Attributes
+- Using
 ```csharp
 using JahnStarGames.Attributes;
 ```
