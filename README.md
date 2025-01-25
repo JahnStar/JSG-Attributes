@@ -17,7 +17,7 @@ A comprehensive collection of custom attributes to enhance Unity Inspector funct
 1. Open the Package Manager in Unity (Window > Package Manager)
 2. Click the "+" button in the top-left corner
 3. Choose "Add package from git URL..."
-4. Enter: `https://github.com/Jahn-Star-Games/JSG-Attributes`
+4. Enter: `https://github.com/Jahn-Star-Games/JSG-Attributes.git`
 
 Or simply copy the contents of this repository into your Unity project's Packages folder.
 
