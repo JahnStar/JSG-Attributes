@@ -20,8 +20,14 @@ namespace JahnStarGames.Attributes
         #pragma warning disable 0414
         [SerializeField, HideInInspector]
         private bool keyCollision;
-        #pragma warning restore 0414
+        
+        public HeySerializableDictionary() { }
+        public HeySerializableDictionary(Dictionary<TKey, TValue> dictionary)
+        {
+            foreach (var kvp in dictionary) Add(kvp.Key, kvp.Value);
+        }
 
+        #pragma warning restore 0414
         [Serializable]
         public class SerializableKeyValuePair
         {

@@ -45,14 +45,53 @@ namespace JahnStarGames.Attributes
 
         private void DrawListElement(Rect rect, int index, bool isActive, bool isFocused)
         {
-            var element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
-            var keyProperty = element.FindPropertyRelative("Key");
-            var valueProperty = element.FindPropertyRelative("Value");
+            // Validate reorderableList and index
+            if (_reorderableList == null || _reorderableList.serializedProperty == null || index < 0 || index >= _reorderableList.serializedProperty.arraySize)
+            {
+                EditorGUI.LabelField(rect, "Invalid element");
+                return;
+            }
+
+            SerializedProperty element;
+            try
+            {
+                element = _reorderableList.serializedProperty.GetArrayElementAtIndex(index);
+                if (element == null)
+                {
+                    EditorGUI.LabelField(rect, "Element is null");
+                    return;
+                }
+            }
+            catch (Exception ex)
+            {
+                EditorGUI.LabelField(rect, $"Element error: {ex.Message}");
+                return;
+            }
+
+            SerializedProperty keyProperty = null;
+            SerializedProperty valueProperty = null;
+            
+            try
+            {
+                keyProperty = element.FindPropertyRelative("Key");
+                valueProperty = element.FindPropertyRelative("Value");
+            }
+            catch (Exception ex)
+            {
+                EditorGUI.LabelField(rect, $"Property access error: {ex.Message}");
+                return;
+            }
+
+            if (keyProperty == null)
+            {
+                EditorGUI.LabelField(rect, "Key property is missing");
+                return;
+            }
 
             rect.y += VerticalSpacing;
             
             float keyWidth = rect.width * 0.35f;
-            float valueHeight = EditorGUI.GetPropertyHeight(valueProperty, true);
+            float valueHeight = valueProperty != null ? EditorGUI.GetPropertyHeight(valueProperty, true) : SingleLineHeight;
 
             EditorGUI.BeginChangeCheck();
             
@@ -60,32 +99,60 @@ namespace JahnStarGames.Attributes
             var valueRect = new Rect(rect.x + keyWidth + Padding, rect.y, rect.width - keyWidth - Padding, valueHeight);
 
             EditorGUI.PropertyField(keyRect, keyProperty, GUIContent.none);
-            if (valueProperty == null) EditorGUI.LabelField(valueRect, "Non-Serializable Value");
+            
+            if (valueProperty == null)
+            {
+                EditorGUI.LabelField(valueRect, "Non-Serializable Value");
+            }
             else if (valueProperty.hasVisibleChildren)
             {
                 var foldoutRect = new Rect(valueRect.x + Padding * 2f, valueRect.y, valueRect.width, SingleLineHeight);
-                valueProperty.isExpanded = EditorGUI.Foldout(foldoutRect, valueProperty.isExpanded, GetTypeName(valueProperty), true);
-
-                if (valueProperty.isExpanded)
+                try
                 {
-                    valueRect = new Rect(rect.x, rect.y + SingleLineHeight + 2, rect.width - SingleLineHeight, valueHeight);
-                    EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none, true);
+                    valueProperty.isExpanded = EditorGUI.Foldout(foldoutRect, valueProperty.isExpanded, GetTypeName(valueProperty), true);
+
+                    if (valueProperty.isExpanded)
+                    {
+                        valueRect = new Rect(rect.x, rect.y + SingleLineHeight + 2, rect.width - SingleLineHeight, valueHeight);
+                        EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none, true);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    EditorGUI.LabelField(valueRect, $"Error: {ex.Message}");
                 }
             }
-            else EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none, true);
+            else
+            {
+                try
+                {
+                    EditorGUI.PropertyField(valueRect, valueProperty, GUIContent.none, true);
+                }
+                catch (Exception ex) 
+                {
+                    EditorGUI.LabelField(valueRect, $"Error: {ex.Message}");
+                }
+            }
 
             if (EditorGUI.EndChangeCheck())
             {
-                // Apply the changes immediately
-                _reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
-                
-                // Update the dictionary value
-                var targetObject = _reorderableList.serializedProperty.serializedObject.targetObject;
-                var methodInfo = targetObject.GetType().GetMethod("UpdateValueFromList", 
-                    System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | 
-                    System.Reflection.BindingFlags.Instance);
-                
-                methodInfo?.Invoke(targetObject, new object[] { index });
+                try
+                {
+                    // Apply the changes immediately
+                    _reorderableList.serializedProperty.serializedObject.ApplyModifiedProperties();
+                    
+                    // Update the dictionary value
+                    var targetObject = _reorderableList.serializedProperty.serializedObject.targetObject;
+                    var methodInfo = targetObject?.GetType().GetMethod("UpdateValueFromList", 
+                        System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.NonPublic | 
+                        System.Reflection.BindingFlags.Instance);
+                    
+                    methodInfo?.Invoke(targetObject, new object[] { index });
+                }
+                catch (Exception ex)
+                {
+                    Debug.LogError($"Error updating dictionary: {ex.Message}\n{ex.StackTrace}");
+                }
             }
         }
 
