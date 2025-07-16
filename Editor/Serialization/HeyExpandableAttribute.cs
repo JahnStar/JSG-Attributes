@@ -23,7 +23,7 @@ namespace JahnStarGames.Attributes
             if (property.propertyType != SerializedPropertyType.ObjectReference) return EditorGUI.GetPropertyHeight(property, label, true);
             else if (property.objectReferenceValue == null) return base.GetPropertyHeight(property, label);
 
-            Type propertyType = fieldInfo.FieldType;
+            Type propertyType = GetElementType(fieldInfo.FieldType);
             if (!typeof(ScriptableObject).IsAssignableFrom(propertyType)) return base.GetPropertyHeight(property, label);
 
             ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
@@ -59,11 +59,10 @@ namespace JahnStarGames.Attributes
             EditorGUI.BeginProperty(position, label, property);
 
             if (property.propertyType != SerializedPropertyType.ObjectReference) EditorGUI.PropertyField(position, property, label, true);
-            else if (property.objectReferenceValue == null) EditorGUI.PropertyField(position, property, label, true);
-            else
-            {
-                Type propertyType = fieldInfo.FieldType;
-                if (typeof(ScriptableObject).IsAssignableFrom(propertyType))
+            else if (property.objectReferenceValue == null) EditorGUI.PropertyField(position, property, label, true);                else
+                {
+                    Type propertyType = GetElementType(fieldInfo.FieldType);
+                    if (typeof(ScriptableObject).IsAssignableFrom(propertyType))
                 {
                     ScriptableObject scriptableObject = property.objectReferenceValue as ScriptableObject;
                     
@@ -118,6 +117,17 @@ namespace JahnStarGames.Attributes
             }
 
             serializedObject.ApplyModifiedProperties();
+        }
+
+        private Type GetElementType(Type type)
+        {
+            if (type.IsArray)
+                return type.GetElementType();
+            
+            if (type.IsGenericType && typeof(System.Collections.IList).IsAssignableFrom(type))
+                return type.GetGenericArguments()[0];
+            
+            return type;
         }
     }
 #endif
