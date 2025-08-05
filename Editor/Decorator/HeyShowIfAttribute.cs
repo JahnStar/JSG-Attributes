@@ -75,7 +75,10 @@ namespace JahnStarGames.Attributes
                 case SerializedPropertyType.Boolean: return conditionProperty.boolValue == (bool)attribute.conditionValue;
                 case SerializedPropertyType.Integer: return conditionProperty.intValue == (int)attribute.conditionValue;
                 case SerializedPropertyType.Float: return conditionProperty.floatValue == (float)attribute.conditionValue;
-                case SerializedPropertyType.String: return conditionProperty.stringValue == (string)attribute.conditionValue;
+                case SerializedPropertyType.String when attribute.conditionValue is string:
+                    return conditionProperty.stringValue == (string)attribute.conditionValue;
+                case SerializedPropertyType.String when attribute.conditionValue is bool:
+                    return (bool)attribute.conditionValue ? !string.IsNullOrEmpty(conditionProperty.stringValue) : string.IsNullOrEmpty(conditionProperty.stringValue);
                 case SerializedPropertyType.Enum:
                     int enumValue = conditionProperty.intValue;
                     int targetValue = (int)attribute.conditionValue;
