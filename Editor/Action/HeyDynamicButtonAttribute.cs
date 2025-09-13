@@ -30,7 +30,8 @@ namespace JahnStarGames.Attributes
         private MethodInfo methodInfo;
         private string method;
         //
-        private readonly GUIStyle linkHeader = new GUIStyle(EditorStyles.linkLabel) { fontStyle = FontStyle.Bold };
+        private GUIStyle _linkHeader;
+        private GUIStyle linkHeader => _linkHeader ??= new GUIStyle(EditorStyles.linkLabel) { fontStyle = FontStyle.Bold };
         public override float GetPropertyHeight(SerializedProperty property, GUIContent label)
         {
             if (property.propertyType == SerializedPropertyType.String) return property.name.First() == '_' && string.IsNullOrEmpty(property.stringValue) ? 10f : base.GetPropertyHeight(property, label);
